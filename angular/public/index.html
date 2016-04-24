@@ -1,0 +1,137 @@
+<html ng-app="myApp">
+	<head>
+		<title>Movie DB</title>
+		<!-- bootstrap css file -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<!-- font-awesome icons css file -->
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<!-- my css file -->
+		<link rel="stylesheet" href="css/main.css">
+	</head>
+	<body ng-controller="myCtrl">
+		<!-- Navigation pane -->
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+				<!-- Mobile-collapsed version of navbar -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#my-navbar" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand"><i class="fa fa-film"></i> Movie DB</a>
+				</div>
+
+				<!-- Navbar pieces -->
+				<div class="collapse navbar-collapse" id="my-navbar">
+					<ul class="nav navbar-nav">
+						<li><a ng-click="page = 'search'"><i class="fa fa-search"></i> Search</a></li>
+						<li><a ng-click="page = 'favorites'"><i class="fa fa-heart"></i> Favorites</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div id="mainDiv" class="container">
+			<!-- search page -->
+			<div ng-show="page === 'search'">
+				<h2 class="text-center">Search Movie Database</h2>
+				<div class="row">
+					<div class="col-xs-12 col-md-8 col-md-offset-2">
+						<form ng-submit="search(searchText)">
+							<div class="input-group">
+								<input class="form-control input-lg" type="text" ng-model="searchText" ng-submit="search(searchText)">
+								<span class="input-group-btn">
+									<button class="btn btn-default btn-lg" type="button" ng-click="search(searchText)">
+										<i class="fa fa-search fa-2"></i>
+									</button>
+								</span>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="row row-spacing">
+					<div class="col-xs-12 col-md-8 col-md-offset-2">
+						<table class="table table-condensed table-hover table-bordered">
+							<tbody id="searchResults">
+								<tr ng-repeat-start="movie in searchResults" ng-init="isOpen = false" ng-click="isOpen = !isOpen">
+									<td>
+										<h4>{{movie.Title}}</h4>
+									</td>
+								</tr>
+								<tr ng-repeat-end uib-collapse="!isOpen">
+									<td class="shadow no-hover">
+										<div class="row">
+											<div class="col-xs-1">
+												<button class="favBtn btn btn-default" type="button" ng-click="addFav(movie)" ng-hide="(favorites | filter:{imdbID: movie.imdbID}).length > 0">
+													<span class="fa fa-heart"></span>
+												</button>
+												<button class="rmvBtn btn btn-default" type="button" ng-click="rmvFav(movie)" ng-show="(favorites | filter:{imdbID: movie.imdbID}).length > 0">
+													<span class="fa fa-heart"></span>
+												</button>
+											</div>
+											<div class="col-xs-3">
+												<div>Year: {{movie.Year}}</div>
+												<div>Director: {{movie.Director}}</div>
+											</div>
+											<div class="col-xs-8">
+												{{movie.Plot}}
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<!-- favorites page -->
+			<div ng-show="page === 'favorites'">
+				<h2 class="text-center">Favorites</h2>
+				<div class="row">
+					<div class="col-xs-12 col-md-8 col-md-offset-2">
+						<table class="table table-condensed table-hover table-bordered">
+							<tbody id="favoritesList">
+								<tr ng-repeat-start="movie in favorites" ng-init="isOpen = false" ng-click="isOpen = !isOpen">
+									<td>
+										<h4>{{movie.Title}}</h4>
+									</td>
+								</tr>
+								<tr ng-repeat-end uib-collapse="!isOpen">
+									<td class="shadow no-hover">
+										<div class="row">
+											<div class="col-xs-1">
+												<button class="favBtn btn btn-default" type="button" ng-click="addFav(movie)" ng-hide="(favorites | filter:{imdbID: movie.imdbID}).length > 0">
+													<span class="fa fa-heart"></span>
+												</button>
+												<button class="rmvBtn btn btn-default" type="button" ng-click="rmvFav(movie)" ng-show="(favorites | filter:{imdbID: movie.imdbID}).length > 0">
+													<span class="fa fa-heart"></span>
+												</button>
+											</div>
+											<div class="col-xs-3">
+												<div>Year: {{movie.Year}}</div>
+												<div>Director: {{movie.Director}}</div>
+											</div>
+											<div class="col-xs-8">
+												{{movie.Plot}}
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Include required javascript files last because they take the longest to load -->
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="js/angular.min.js"></script>
+		<script src="js/angular-resource.min.js"></script>
+    	<script src="js/ui-bootstrap-1.3.2.min.js"></script>
+		<script src="js/main.js"></script>
+	</body>
+</html>
