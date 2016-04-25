@@ -14,6 +14,8 @@
 			<div class="container-fluid">
 				<!-- Mobile-collapsed version of navbar -->
 				<div class="navbar-header">
+					<!-- ng-init creates a $scope javascript variable inline in the document -->
+					<!-- ng-click is a click event that executes the provided angular javascript code -->
 					<button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
@@ -35,12 +37,15 @@
 
 		<div id="mainDiv" class="container">
 			<!-- search page -->
+			<!-- ng-show shows (un-hides) this section when the expression is true -->
 			<div ng-show="page === 'search'">
 				<h2 class="text-center">Search Movie Database</h2>
 				<div class="row">
 					<div class="col-xs-12 col-md-8 col-md-offset-2">
+						<!-- ng-submit intercepts form submit action (enter key) and executes $scope function -->
 						<form ng-submit="search(searchText)">
 							<div class="input-group">
+								<!-- ng-model binds the value of the input field to the provided $scope variable -->
 								<input class="form-control input-lg" type="text" ng-model="searchText" ng-submit="search(searchText)">
 								<span class="input-group-btn">
 									<button class="btn btn-default btn-lg" type="button" ng-click="search(searchText)">
@@ -55,8 +60,10 @@
 					<div class="col-xs-12 col-md-8 col-md-offset-2">
 						<table class="table table-condensed table-hover table-bordered">
 							<tbody id="searchResults">
+								<!-- ng-repeat repeats the tagged html block (or group of blocks in the case of ng-repeat-start/ng-repeat-end) for each element in the provided $scope variable array -->
 								<tr ng-repeat-start="movie in searchResults" ng-init="isOpen = false" ng-click="isOpen = !isOpen">
 									<td>
+										<!-- Double curly brackets with a scope variable within replaces the double bracket string with the value of the provided variable -->
 										<h4>{{movie.Title}}</h4>
 									</td>
 								</tr>
@@ -64,6 +71,8 @@
 									<td class="shadow no-hover">
 										<div class="row">
 											<div class="col-xs-1">
+												<!-- the provided ng-hide expression is an array that is filtered down with the provided filter, which only returns elements that match the filter criteria -->
+												<!-- ng-hide is the opposite of ng-show and hides the element when the expression is true -->
 												<button class="favBtn btn btn-default" type="button" ng-click="addFav(movie)" ng-hide="(favorites | filter:{imdbID: movie.imdbID}).length > 0">
 													<span class="fa fa-heart"></span>
 												</button>
@@ -128,7 +137,6 @@
 		</div>
 
 		<!-- Include required javascript files last because they take the longest to load -->
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="js/angular.min.js"></script>
 		<script src="js/angular-resource.min.js"></script>
     	<script src="js/ui-bootstrap-1.3.2.min.js"></script>
