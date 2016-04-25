@@ -19,11 +19,14 @@ function httpAsync(method, url, data, callback) {
     xmlHttp.send(data);
 }
 
+// DOM Parser is not available in IE8 or below, I believe
 var domParser = new DOMParser();
 var mainDiv = document.getElementById('mainDiv');
 var currentPage = 'search';
 
 // When search/favorites nav buttons are clicked, get corresponding page
+// The proper way to bind click events to HTML tags is as shown here, via addEventListener
+// While possible, onclick="" on HTML elements is NOT recommended
 document.getElementById('searchPage').addEventListener('click', getSearchPage, false);
 document.getElementById('favPage').addEventListener('click', getFavoritesPage, false);
 
@@ -85,42 +88,38 @@ httpAsync('GET', '/api/favorites', null, function(data) {
 
 // Send api request to our server to store favorites
 function addFav(movie) {
-	(function(movie) {
-		httpAsync('POST', '/api/favorites', JSON.stringify(movie), function(data) {
-			favoritesList = JSON.parse(data);
-			var rmvBtn = document.getElementById('rmvFavBtn'+movie.imdbID);
-			rmvBtn.className = rmvBtn.className.replace('hidden', '');
-			document.getElementById('addFavBtn'+movie.imdbID).className += ' hidden';
-		});
-	})(movie);
+	httpAsync('POST', '/api/favorites', JSON.stringify(movie), function(data) {
+		favoritesList = JSON.parse(data);
+		var rmvBtn = document.getElementById('rmvFavBtn'+movie.imdbID);
+		rmvBtn.className = rmvBtn.className.replace('hidden', '');
+		document.getElementById('addFavBtn'+movie.imdbID).className += ' hidden';
+	});
 }
 
 // Send api request to our server to remove favorite by ID
 function removeFav(imdbID) {
-	(function(imdbID) {
-		httpAsync('DELETE', '/api/favorites/'+imdbID, null, function(data){
-			// remove movie from favorites list and remove element from page
-			for(var i = 0; i < favoritesList.length; i++) {
-				if(imdbID === favoritesList[i].imdbID) {
-					favoritesList.splice(i,1);
-					if(currentPage === 'search') {
-						// On the search page, simply switch the hidden status of the favorite/remove buttons
-						var favBtn = document.getElementById('addFavBtn'+imdbID);
-						favBtn.className = favBtn.className.replace('hidden', '');
-						document.getElementById('rmvFavBtn'+imdbID).className += ' hidden';
-					} else if(currentPage === 'favorites') {
-						// On the favorites page, remove the movie element from the page entirely
-						var containerElem = document.getElementById('favoritesList');
-						var movieElem = document.getElementById(imdbID);
-						console.log(imdbID);
-						console.log(movieElem);
-						if(movieElem) containerElem.removeChild(movieElem);
-					}
-					break;
+	httpAsync('DELETE', '/api/favorites/'+imdbID, null, function(data){
+		// remove movie from favorites list and remove element from page
+		for(var i = 0; i < favoritesList.length; i++) {
+			if(imdbID === favoritesList[i].imdbID) {
+				favoritesList.splice(i,1);
+				if(currentPage === 'search') {
+					// On the search page, simply switch the hidden status of the favorite/remove buttons
+					var favBtn = document.getElementById('addFavBtn'+imdbID);
+					favBtn.className = favBtn.className.replace('hidden', '');
+					document.getElementById('rmvFavBtn'+imdbID).className += ' hidden';
+				} else if(currentPage === 'favorites') {
+					// On the favorites page, remove the movie element from the page entirely
+					var containerElem = document.getElementById('favoritesList');
+					var movieElem = document.getElementById(imdbID);
+					console.log(imdbID);
+					console.log(movieElem);
+					if(movieElem) containerElem.removeChild(movieElem);
 				}
+				break;
 			}
-		});
-	})(imdbID);
+		}
+	});
 }
 
 // Run search against API, create and append elements to search results
@@ -173,6 +172,7 @@ function addMovie(parent, movie) {
 	// Add the new dom element to the search results
 	parent.insertAdjacentHTML('beforeEnd', newChild.documentElement.outerHTML);
 
+	// Click function to show/hide movie details when movie title is clicked
 	document.getElementById('collapseHeader'+movie.imdbID).addEventListener('click', function(){
 		var collapseBody = document.getElementById('collapseBody'+movie.imdbID);
 		if(collapseBody.className.indexOf('hidden') > -1) {
