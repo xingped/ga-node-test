@@ -2,7 +2,7 @@
 - Rewrite the application using a JavaScript MVC library. Include a readme that explains the benefits and any additional challenges students would face learning the library
 
 
-### Benfits
+### Benefits
 - Using Angular allows you to not have to worry about DOM manipulations (unless you want to do some really fancy stuff)
 - It requires significantly less code and allows you to worry about just manipulating data
 	- Proper separation of MVC
