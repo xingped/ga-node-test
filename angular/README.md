@@ -6,7 +6,7 @@
 - Using Angular allows you to not have to worry about DOM manipulations (unless you want to do some really fancy stuff)
 - It requires significantly less code and allows you to worry about just manipulating data
 	- Proper separation of MVC
-		- Your code is the Model, which is simply handling the data
+		- Your javascript code is the Model, which is simply handling the data
 		- HTML is your View, it is static and you don't update this as Angular does the updating for you
 		- Angular is the Controller that handles updating the View based on data changes in the Model
 
